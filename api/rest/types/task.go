@@ -30,6 +30,7 @@ type GetResponse struct {
 }
 
 type SetRequest struct {
+	Title  string        `json:"title"`
 	Data   string        `json:"data"`
 	Status domain.Status `json:"status"`
 }
@@ -43,6 +44,10 @@ func CreateSetRequest(r *http.Request) (*SetRequest, error) {
 
 	if !validateStatus(req.Status) {
 		return nil, errors.New("unexpected status value")
+	}
+
+	if req.Title == "" {
+		return nil, errors.New("title cannot be empty")
 	}
 
 	return &req, nil

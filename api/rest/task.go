@@ -67,7 +67,11 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 
 	h.logger.Log("INFO", fmt.Sprintf("GetTaskByID %d: success", req.ID))
 
-	json.NewEncoder(w).Encode(resp)
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		h.logger.Log("ERROR", fmt.Sprintf("GetTaskByID: failed to encode json: %v", err))
+	}
 }
 
 func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
@@ -79,6 +83,7 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := h.service.Post(domain.Task{
+		Title:  req.Title,
 		Data:   req.Data,
 		Status: req.Status,
 	})
@@ -87,7 +92,11 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	resp := types.SetResponse{ID: id}
 
-	json.NewEncoder(w).Encode(resp)
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		h.logger.Log("ERROR", fmt.Sprintf("CreateTask: failed to encode json: %v", err))
+	}
 }
 
 func (h *TaskHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) {
@@ -115,5 +124,9 @@ func (h *TaskHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	h.logger.Log("INFO", "GetAllTasks: success")
 
-	json.NewEncoder(w).Encode(resp)
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		h.logger.Log("ERROR", fmt.Sprintf("GetAllTasks: failed to encode json: %v", err))
+	}
 }

@@ -10,6 +10,7 @@ const (
 
 type Task struct {
 	ID     int
+	Title  string
 	Data   string
 	Status Status
 }
