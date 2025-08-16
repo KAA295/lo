@@ -10,33 +10,33 @@ import (
 	"github.com/KAA295/lo/domain"
 )
 
-type GetRequest struct {
+type GetTaskRequest struct {
 	ID int `json:"id"`
 }
 
-func CreateGetRequest(r *http.Request) (*GetRequest, error) {
+func CreateGetRequest(r *http.Request) (*GetTaskRequest, error) {
 	idParam := r.PathValue("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return nil, fmt.Errorf("can't convert idParam to int: %w", err)
 	}
-	return &GetRequest{ID: id}, nil
+	return &GetTaskRequest{ID: id}, nil
 }
 
-type GetResponse struct {
+type GetTaskResponse struct {
 	ID     int           `json:"id"`
 	Data   string        `json:"data"`
 	Status domain.Status `json:"status"`
 }
 
-type SetRequest struct {
+type CreateTaskRequest struct {
 	Title  string        `json:"title"`
 	Data   string        `json:"data"`
 	Status domain.Status `json:"status"`
 }
 
-func CreateSetRequest(r *http.Request) (*SetRequest, error) {
-	req := SetRequest{}
+func CreateSetRequest(r *http.Request) (*CreateTaskRequest, error) {
+	req := CreateTaskRequest{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return nil, fmt.Errorf("error while decoding json: %w", err)
@@ -53,18 +53,18 @@ func CreateSetRequest(r *http.Request) (*SetRequest, error) {
 	return &req, nil
 }
 
-type SetResponse struct {
+type CreateTaskResponse struct {
 	ID int `json:"id"`
 }
 
-type GetAllRequest struct {
+type GetAllTasksRequest struct {
 	StatusFilter domain.Status `json:"status"`
 }
 
-func CreateGetAllRequest(r *http.Request) (*GetAllRequest, error) {
+func CreateGetAllRequest(r *http.Request) (*GetAllTasksRequest, error) {
 	q := r.URL.Query()
 
-	var req GetAllRequest
+	var req GetAllTasksRequest
 
 	status := q.Get("status")
 
@@ -82,7 +82,7 @@ type TaskEntry struct {
 	Status domain.Status `json:"status"`
 }
 
-type GetAllResponse struct {
+type GetAllTasksResponse struct {
 	Tasks []TaskEntry `json:"tasks"`
 }
 

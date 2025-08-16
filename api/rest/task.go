@@ -59,7 +59,7 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	resp := types.GetResponse{
+	resp := types.GetTaskResponse{
 		ID:     task.ID,
 		Data:   task.Data,
 		Status: task.Status,
@@ -90,7 +90,7 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	h.logger.Log("INFO", fmt.Sprintf("Task created: ID=%d", id))
 
-	resp := types.SetResponse{ID: id}
+	resp := types.CreateTaskResponse{ID: id}
 
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
@@ -109,7 +109,7 @@ func (h *TaskHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	tasks := h.service.GetAll(req.StatusFilter)
 
-	var resp types.GetAllResponse
+	var resp types.GetAllTasksResponse
 
 	tasksSlice := make([]types.TaskEntry, len(tasks))
 	resp.Tasks = tasksSlice
